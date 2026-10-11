@@ -13,6 +13,5 @@ pub mod widgets;
 pub mod debug;
 #[cfg(target_os = "macos")]
 pub mod macos;
-pub mod ads;
 pub mod director;
 pub mod treemap;

@@ -21,8 +21,6 @@ mod icon;
 #[cfg(feature = "gui")]
 mod sound;
 #[cfg(feature = "gui")]
-mod sponsor;
-#[cfg(feature = "gui")]
 mod ui;
 #[cfg(feature = "gui")]
 mod update;
@@ -30,7 +28,7 @@ mod update;
 mod watch;
 
 /// GitHub repository used for releases, self-update and agent downloads.
-pub const GITHUB_REPO: &str = "adileo/squirreldisk";
+pub const GITHUB_REPO: &str = "spenserhale/squirreldisk";
 
 fn main() {
     // Invoked by ssh as SSH_ASKPASS helper: answer the prompt and leave.

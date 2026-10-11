@@ -67,8 +67,7 @@ impl App {
 
         let body = Rect::from_min_max(Pos2::new(screen.left(), bar.bottom() + 4.0), screen.max);
         let panel_w = (body.width() * 0.36).clamp(300.0, 440.0);
-        let banner = Rect::from_min_max(Pos2::new(body.right() - panel_w - 16.0, body.bottom() - 16.0 - 52.0), Pos2::new(body.right() - 16.0, body.bottom() - 16.0));
-        let panel = Rect::from_min_max(Pos2::new(body.right() - panel_w - 16.0, body.top() + 6.0), Pos2::new(body.right() - 16.0, banner.top() - 10.0));
+        let panel = Rect::from_min_max(Pos2::new(body.right() - panel_w - 16.0, body.top() + 6.0), Pos2::new(body.right() - 16.0, body.bottom() - 16.0));
         let chart = Rect::from_min_max(Pos2::new(body.left() + 8.0, body.top()), Pos2::new(panel.left() - 8.0, body.bottom() - 76.0));
         let collector = Rect::from_min_size(Pos2::new(body.left() + 20.0, body.bottom() - 70.0), Vec2::new((chart.width() - 24.0).min(460.0), 54.0));
 
@@ -78,7 +77,6 @@ impl App {
             self.chart_ui(ui, chart, panel, si);
         }
         self.panel_ui(ui, panel, si);
-        self.sponsor_banner(ui, banner, "panel");
         self.collector_ui(ui, collector, si);
 
         // Linux: follow the view with inotify watches

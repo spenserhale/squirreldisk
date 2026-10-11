@@ -320,7 +320,6 @@ pub struct App {
     pub home_content_h: f32,
     /// Last time we asked GitHub for a new version.
     pub update_checked: Instant,
-    pub sponsors: crate::sponsor::Sponsors,
     /// App icon as a texture, for the home header.
     pub logo: Option<egui::TextureHandle>,
     pub dock: DockState,
@@ -475,7 +474,6 @@ impl App {
             home_scroll: 0.0,
             home_content_h: 0.0,
             update_checked: Instant::now(),
-            sponsors: crate::sponsor::Sponsors::start(settings.sponsor_measurement),
             logo: None,
             dock: DockState::default(),
             director: super::director::Director::from_env(),
@@ -486,25 +484,6 @@ impl App {
             font_scripts: 0,
             chrome: if cfg!(target_os = "macos") { (15.0, 68.0) } else { (22.0, 0.0) },
             settings,
-        }
-    }
-
-    /// Feeds the local sponsor matcher with the startup disk fill level.
-    pub fn update_sponsor_disk(&self) {
-        let boot = self.volumes.iter().find(|v| v.is_boot).map(|v| v.used_frac());
-        let external = self.volumes.iter().any(|v| v.removable);
-        self.sponsors.set_disk(boot, external);
-    }
-
-    /// Draws the sponsor banner and handles views/clicks.
-    pub fn sponsor_banner(&mut self, ui: &mut egui::Ui, rect: Rect, placement: &'static str) {
-        let personalized = self.settings.personalized_sponsors;
-        let measure = self.settings.sponsor_measurement;
-        let choice = self.sponsors.choose(personalized);
-        self.sponsors.record_view(&choice.ad, placement, measure);
-        let theme = self.theme.clone();
-        if let super::ads::BannerAction::Open = super::ads::banner(ui, rect, egui::Id::new(("sponsor", placement)), &choice, personalized, &theme) {
-            os_open(&self.sponsors.click_url(&choice.ad, placement, measure), false);
         }
     }
 
@@ -715,7 +694,6 @@ impl App {
         let mut sounds: Vec<Sfx> = Vec::new();
         let mut toasts: Vec<(String, Color32)> = Vec::new();
         let mut auth_needed: Option<(String, String)> = None;
-        let mut interest_jobs: Vec<SharedTree> = Vec::new();
         let watch_enabled = self.settings.watch_fs;
         for s in self.sessions.iter_mut() {
             // scan finished?
@@ -731,9 +709,6 @@ impl App {
                 } else {
                     // A finished scan speaks for itself: no toast, just the (optional) sound.
                     sounds.push(Sfx::Success);
-                    if s.source().is_local() {
-                        interest_jobs.push(s.tree.clone());
-                    }
                     if watch_enabled && s.source().is_local() {
                         let root = s.tree.read().unwrap().root_path.clone();
                         s.watch = FsWatch::new(std::path::Path::new(&root));
@@ -783,12 +758,6 @@ impl App {
         }
         for (t, c) in toasts {
             self.toasts.push(t, c);
-        }
-        if self.settings.personalized_sponsors {
-            for tree in interest_jobs {
-                // On-device only: folder names + sizes already in memory.
-                self.sponsors.learn_from_scan(tree);
-            }
         }
         if let Some((host, path)) = auth_needed {
             let retry = self.ssh_tried.contains(&host);
@@ -870,9 +839,6 @@ impl eframe::App for App {
         self.last_frame = now;
         self.time += self.dt as f64;
         self.apply_theme(&ctx);
-        if self.time < 0.1 {
-            self.update_sponsor_disk();
-        }
         self.direct(&ctx);
         self.marks.clear();
         self.debug_hooks(&ctx);
@@ -883,7 +849,6 @@ impl eframe::App for App {
         if self.volumes_at.elapsed() > Duration::from_secs(5) && self.screen == Screen::Home {
             self.volumes = disks::list();
             self.volumes_at = Instant::now();
-            self.update_sponsor_disk();
         }
 
         // dropped folders → scan

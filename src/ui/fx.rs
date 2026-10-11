@@ -174,7 +174,6 @@ impl Toasts {
         self.list.retain(|t| t.born.elapsed().as_secs_f32() < 5.0);
         let screen = ctx.content_rect();
         let painter = ctx.layer_painter(LayerId::new(Order::Tooltip, Id::new("toasts")));
-        // stay above the sponsor banner that sits in the bottom-right corner
         let mut y = screen.bottom() - 84.0;
         let k = 1.0 - (-dt * 14.0).exp();
         for t in self.list.iter_mut().rev() {

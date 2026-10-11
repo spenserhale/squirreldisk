@@ -4,7 +4,7 @@ version = "2.5.0"
 edition = "2021"
 description = "Fast, fun, cross-platform disk usage analyzer with an animated sunburst"
 license = "AGPL-3.0-only"
-repository = "https://github.com/adileo/squirreldisk"
+repository = "https://github.com/spenserhale/squirreldisk"
 
 [features]
 default = ["gui"]
