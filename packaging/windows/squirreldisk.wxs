@@ -19,8 +19,8 @@
 
     <Icon Id="AppIcon" SourceFile="assets\icon\SquirrelDisk.ico" />
     <Property Id="ARPPRODUCTICON" Value="AppIcon" />
-    <Property Id="ARPURLINFOABOUT" Value="https://squirreldisk.com" />
-    <Property Id="ARPHELPLINK" Value="https://github.com/adileo/squirreldisk/issues" />
+    <Property Id="ARPURLINFOABOUT" Value="https://github.com/spenserhale/squirreldisk" />
+    <Property Id="ARPHELPLINK" Value="https://github.com/spenserhale/squirreldisk/issues" />
 
     <StandardDirectory Id="LocalAppDataFolder">
       <Directory Id="ProgramsFolder" Name="Programs">
