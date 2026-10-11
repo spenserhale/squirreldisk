@@ -1,4 +1,9 @@
 /target
+/target-cli
 *.bmp
 .DS_Store
 /web
+/squirreldisk.com
+/SquirrelDisk-Windows.msi
+/SquirrelDisk-Windows.wixpdb
+/install.log
